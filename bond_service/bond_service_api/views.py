@@ -6,7 +6,8 @@ from rest_framework.generics import (
 )
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny
-# from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.utils import extend_schema, extend_schema_view
+# , OpenApiParameter, OpenApiExample
 # from drf_spectacular.types import OpenApiTypes
 from .serializers import (
     MyTokenObtainPairSerializer,
@@ -15,7 +16,22 @@ from .serializers import (
 )
 
 
-class MyObtainTokenPairView(TokenObtainPairView):
+@extend_schema_view(
+    post=extend_schema(
+        tags=['tokens'],
+        summary='Refresh JWT Token',
+        responses={
+            200: {
+                'type': 'object',
+                'properties': {
+                    'refresh': {'type': 'string'},
+                    'access': {'type': 'string'},
+                },
+            },
+        },
+    ),
+)
+class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
     permission_classes = [AllowAny]
 
