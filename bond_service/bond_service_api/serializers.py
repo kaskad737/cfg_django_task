@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+from .models import Portfolio, Bond
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -66,3 +67,21 @@ class UsersListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = 'pk', 'username'
+
+
+class BondSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bond
+        fields = '__all__'
+
+
+class PortfolioSerializer(serializers.ModelSerializer):
+    bonds = BondSerializer(many=True, read_only=True, source='bond_set')
+
+    class Meta:
+        model = Portfolio
+        fields = '__all__'
+
+
+class PortfolioInvestmentAnalysisSerializer(serializers.Serializer):
+    portfolio_pk = serializers.IntegerField()
