@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .validators import validate_isin
 
 
 class YieldsFrequencyChoices(models.TextChoices):
@@ -18,7 +19,7 @@ class Portfolio(models.Model):
 
 class Bond(models.Model):
     emission_name = models.CharField(max_length=50)
-    emission_isin = models.CharField(max_length=50)
+    emission_isin = models.CharField(max_length=50, validators=[validate_isin])
     bond_value = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     interest_rate = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     purchase_date = models.DateField(null=True, blank=True)
