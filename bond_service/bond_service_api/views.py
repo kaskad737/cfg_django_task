@@ -4,6 +4,7 @@ from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
     ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -20,10 +21,10 @@ from .serializers import (
     RegisterSerializer,
     UsersListSerializer,
     PortfolioSerializer,
-    # BondSerializer,
+    BondSerializer,
     PortfolioInvestmentAnalysisSerializer,
 )
-from .models import Portfolio
+from .models import Portfolio, Bond
 from .utils import get_portfolio_analysis
 from django.shortcuts import get_object_or_404
 
@@ -91,6 +92,16 @@ class UsersListView(ListAPIView):
     queryset = User.objects.all().order_by('pk')
 
 
+@extend_schema_view(
+    get=extend_schema(
+        tags=['portfolio'],
+        parameters=[PortfolioSerializer],
+    ),
+    post=extend_schema(
+        tags=['portfolio'],
+        parameters=[PortfolioSerializer],
+    ),
+)
 class PortfolioListCreateView(ListCreateAPIView):
     serializer_class = PortfolioSerializer
     queryset = Portfolio.objects.all()
@@ -130,3 +141,43 @@ class PortfolioInvestmentAnalysisView(GenericAPIView):
         portfolio = get_object_or_404(Portfolio, pk=portfolio_pk)
         data = get_portfolio_analysis(portfolio=portfolio)
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+@extend_schema_view(
+    get=extend_schema(
+        tags=['bond'],
+        parameters=[BondSerializer],
+    ),
+    post=extend_schema(
+        tags=['bond'],
+        parameters=[BondSerializer],
+    ),
+)
+class ListCreateBondView(ListCreateAPIView):
+    serializer_class = BondSerializer
+    queryset = Bond.objects.all()
+    # permission_classes = [IsAuthenticated]
+
+
+@extend_schema_view(
+    get=extend_schema(
+        tags=['bond'],
+        parameters=[BondSerializer],
+    ),
+    put=extend_schema(
+        tags=['bond'],
+        parameters=[BondSerializer],
+    ),
+    patch=extend_schema(
+        tags=['bond'],
+        parameters=[BondSerializer],
+    ),
+    delete=extend_schema(
+        tags=['bond'],
+        parameters=[BondSerializer],
+    ),
+)
+class RetrieveUpdateDestroyBondView(RetrieveUpdateDestroyAPIView):
+    serializer_class = BondSerializer
+    queryset = Bond.objects.all()
+    # permission_classes = [IsAuthenticated]

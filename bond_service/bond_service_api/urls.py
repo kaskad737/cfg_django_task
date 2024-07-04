@@ -8,6 +8,8 @@ from .views import (
     UsersListView,
     PortfolioListCreateView,
     PortfolioInvestmentAnalysisView,
+    ListCreateBondView,
+    RetrieveUpdateDestroyBondView,
 )
 
 urlpatterns = [
@@ -16,7 +18,9 @@ urlpatterns = [
     path('token/verify/', CustomTokenVerifyView.as_view(), name='token_verify'),
     path('user_register/', RegisterView.as_view(), name='user_register'),
     path('users/', UsersListView.as_view(), name='users'),
-    path("portfolio/", PortfolioListCreateView.as_view(), name='portfolio'),
+    path('portfolio/', PortfolioListCreateView.as_view(), name='portfolio'),
     path('portfolio_investment_analysis/', PortfolioInvestmentAnalysisView.as_view(),
          name='portfolio_investment_analysis'),
+    path('bonds/', ListCreateBondView.as_view(), name='bond'),
+    path('bonds/<int:pk>/', RetrieveUpdateDestroyBondView.as_view(), name='bond_details'),
 ]
