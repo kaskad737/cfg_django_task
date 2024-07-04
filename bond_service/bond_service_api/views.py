@@ -1,11 +1,14 @@
 # from rest_framework.response import Response
 from django.contrib.auth.models import User
+from rest_framework.views import APIView
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView
 )
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_spectacular.utils import extend_schema, extend_schema_view
 # , OpenApiParameter, OpenApiExample
 # from drf_spectacular.types import OpenApiTypes
@@ -45,3 +48,10 @@ class RegisterView(CreateAPIView):
 class UsersListView(ListAPIView):
     serializer_class = UsersListSerializer
     queryset = User.objects.all().order_by('pk')
+
+
+class PortfolioInvestmentAnalysisView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response(data={}, status=status.HTTP_200_OK)
