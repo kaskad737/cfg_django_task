@@ -30,7 +30,7 @@ class Bond(models.Model):
         null=True,
         blank=True
     )
-    portfolio = models.ForeignKey(Portfolio, related_name='portfolios', on_delete=models.CASCADE)
+    portfolio = models.ForeignKey(Portfolio, related_name='bonds', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.emission_name
