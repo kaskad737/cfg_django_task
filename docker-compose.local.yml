@@ -9,6 +9,8 @@ services:
       dockerfile: dockerfile.local
     ports:
       - "8000:8000"
+    volumes:
+      - ./bond_service:/app
     depends_on:
       - db
     environment:
@@ -18,7 +20,9 @@ services:
       - DB_HOST=db
       - DB_PORT=${DB_PORT}
       - SECRET_KEY=${SECRET_KEY}
-      - ENVIRONMENT_TYPE=${ENVIRONMENT_TYPE}
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+      - DEBUG=${DEBUG}
+      - PYTHONUNBUFFERED=1
     networks:
       - django_network
 
