@@ -69,6 +69,12 @@ class UsersListSerializer(serializers.ModelSerializer):
         fields = 'pk', 'username'
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
 class BondSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bond
@@ -80,7 +86,12 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Portfolio
-        fields = '__all__'
+        fields = [
+            'name',
+            'bonds',
+            'created_at',
+            'updated_at',
+        ]
 
 
 class PortfolioInvestmentAnalysisSerializer(serializers.Serializer):
