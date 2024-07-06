@@ -16,8 +16,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'base': {
-            'format': '%(asctime)s.%(msecs)03d | %(name)s |'
-            ' %(levelname)s | %(lineno)-4d | %(message)s',
+            'format': '%(asctime)s.%(msecs)03d | %(name)-25s | %(levelname)-9s | %(lineno)-4d | %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S'
         }
     },
