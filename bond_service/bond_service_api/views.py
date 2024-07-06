@@ -14,7 +14,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from .serializers import (
     MyTokenObtainPairSerializer,
@@ -28,11 +28,6 @@ from .serializers import (
 from .models import Portfolio, Bond
 from .utils import get_portfolio_analysis
 from django.shortcuts import get_object_or_404
-from .permissions import (
-    IsOwnerOrSuperUser,
-    IsOwnerOfPortfolioOrSuperUser,
-    IsOwnerOfPortfolioInvestmentAnalysisOrSuperUser
-)
 
 
 @extend_schema_view(
@@ -77,7 +72,7 @@ class CustomTokenVerifyView(TokenVerifyView):
 
 @extend_schema_view(
     post=extend_schema(
-        tags=['user'],
+        tags=['user_registration'],
         summary='User registration',
     ),
 )
@@ -96,7 +91,7 @@ class UserRegisterView(CreateAPIView):
 class UsersListView(ListAPIView):
     serializer_class = UsersListSerializer
     queryset = User.objects.all().order_by('pk')
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 
 @extend_schema_view(
@@ -116,7 +111,7 @@ class UsersListView(ListAPIView):
 class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all().order_by('pk')
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 
 @extend_schema_view(
@@ -129,11 +124,27 @@ class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 )
 class PortfolioListCreateView(ListCreateAPIView):
     serializer_class = PortfolioSerializer
-    queryset = Portfolio.objects.all().order_by('pk')
-    permission_classes = [IsAuthenticated, IsOwnerOrSuperUser]
+    queryset = Portfolio.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
+
+    def get_queryset(self):
+        '''
+        Get the current user from the request
+        Filter portfolios based on portfolios created by the current user,
+        to restrict access to non-creators
+        '''
+        current_user = self.request.user
+        if current_user.is_anonymous:
+            queryset = Portfolio.objects.none()
+        elif current_user.is_superuser:
+            queryset = Portfolio.objects.all().order_by('pk')
+        else:
+            queryset = Portfolio.objects.filter(
+                created_by=current_user).order_by('pk')
+        return queryset
 
 
 @extend_schema_view(
@@ -153,7 +164,23 @@ class PortfolioListCreateView(ListCreateAPIView):
 class PortfolioRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     serializer_class = PortfolioSerializer
     queryset = Portfolio.objects.all()
-    permission_classes = [IsAuthenticated, IsOwnerOrSuperUser]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        '''
+        Get the current user from the request
+        Filter portfolios based on portfolios created by the current user,
+        to restrict access to non-creators
+        '''
+        current_user = self.request.user
+        if current_user.is_anonymous:
+            queryset = Portfolio.objects.none()
+        elif current_user.is_superuser:
+            queryset = Portfolio.objects.all().order_by('pk')
+        else:
+            queryset = Portfolio.objects.filter(
+                created_by=current_user).order_by('pk')
+        return queryset
 
 
 @extend_schema_view(
@@ -193,10 +220,10 @@ class PortfolioRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 )
 class PortfolioInvestmentAnalysisView(GenericAPIView):
     serializer_class = PortfolioInvestmentAnalysisSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOfPortfolioInvestmentAnalysisOrSuperUser]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        portfolio_pk = self.request.data.get('portfolio_pk')
+        portfolio_pk = self.request.GET.get('portfolio_pk')
         portfolio = get_object_or_404(Portfolio, pk=portfolio_pk)
         data = get_portfolio_analysis(portfolio=portfolio)
         return Response(data=data, status=status.HTTP_200_OK)
@@ -224,7 +251,23 @@ class PortfolioInvestmentAnalysisView(GenericAPIView):
 class BondListCreateView(ListCreateAPIView):
     serializer_class = BondSerializer
     queryset = Bond.objects.all()
-    permission_classes = [IsAuthenticated, IsOwnerOfPortfolioOrSuperUser]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        '''
+        Get the current user from the request
+        Filter bonds details based on portfolios created by the current
+        user, to restrict access to non-creators
+        '''
+        current_user = self.request.user
+        if current_user.is_anonymous:
+            queryset = Bond.objects.none()
+        elif current_user.is_superuser:
+            queryset = Bond.objects.all()
+        else:
+            queryset = Bond.objects.filter(
+                portfolio__created_by=current_user)
+        return queryset
 
 
 @extend_schema_view(
@@ -244,4 +287,20 @@ class BondListCreateView(ListCreateAPIView):
 class BondRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     serializer_class = BondSerializer
     queryset = Bond.objects.all()
-    permission_classes = [IsAuthenticated, IsOwnerOfPortfolioOrSuperUser]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        '''
+        Get the current user from the request
+        Filter bonds details based on portfolios created by the current
+        user, to restrict access to non-creators
+        '''
+        current_user = self.request.user
+        if current_user.is_anonymous:
+            queryset = Bond.objects.none()
+        elif current_user.is_superuser:
+            queryset = Bond.objects.all()
+        else:
+            queryset = Bond.objects.filter(
+                portfolio__created_by=current_user)
+        return queryset
