@@ -1,7 +1,7 @@
 import pytest
 from rest_framework.test import APIClient
 from django.contrib.auth.models import User
-from bond_service.bond_service_api.models import Portfolio, Bond
+from bond_service_api.models import Portfolio, Bond
 
 
 @pytest.fixture
