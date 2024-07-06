@@ -25,15 +25,15 @@ def admin_user(db):
 
 
 @pytest.fixture
-def portfolio1(db):
-    portfolio = Portfolio.objects.create(name='portfolio1')
+def portfolio1(db, user1):
+    portfolio = Portfolio.objects.create(name='portfolio1', created_by=user1)
     Bond.objects.create(emission_name='bond1_1', portfolio=portfolio)
     Bond.objects.create(emission_name='bond2_1', portfolio=portfolio)
     return portfolio
 
 
-def portfolio2(db):
-    portfolio = Portfolio.objects.create(name='portfolio2')
+def portfolio2(db, user2):
+    portfolio = Portfolio.objects.create(name='portfolio2', created_by=user2)
     Bond.objects.create(emission_name='bond1_2', portfolio=portfolio)
     Bond.objects.create(emission_name='bond2_2', portfolio=portfolio)
     return portfolio
