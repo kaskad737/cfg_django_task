@@ -137,9 +137,7 @@ class PortfolioListCreateView(ListCreateAPIView):
         to restrict access to non-creators
         '''
         current_user = self.request.user
-        if current_user.is_anonymous:
-            queryset = Portfolio.objects.none()
-        elif current_user.is_superuser:
+        if current_user.is_superuser:
             queryset = Portfolio.objects.all().order_by('pk')
         else:
             queryset = Portfolio.objects.filter(
@@ -173,9 +171,7 @@ class PortfolioRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         to restrict access to non-creators
         '''
         current_user = self.request.user
-        if current_user.is_anonymous:
-            queryset = Portfolio.objects.none()
-        elif current_user.is_superuser:
+        if current_user.is_superuser:
             queryset = Portfolio.objects.all().order_by('pk')
         else:
             queryset = Portfolio.objects.filter(
@@ -260,9 +256,7 @@ class BondListCreateView(ListCreateAPIView):
         user, to restrict access to non-creators
         '''
         current_user = self.request.user
-        if current_user.is_anonymous:
-            queryset = Bond.objects.none()
-        elif current_user.is_superuser:
+        if current_user.is_superuser:
             queryset = Bond.objects.all()
         else:
             queryset = Bond.objects.filter(
@@ -296,9 +290,7 @@ class BondRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         user, to restrict access to non-creators
         '''
         current_user = self.request.user
-        if current_user.is_anonymous:
-            queryset = Bond.objects.none()
-        elif current_user.is_superuser:
+        if current_user.is_superuser:
             queryset = Bond.objects.all()
         else:
             queryset = Bond.objects.filter(
