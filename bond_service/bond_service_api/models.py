@@ -1,6 +1,14 @@
+import uuid
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from .validators import validate_isin
+
+
+class User(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    def __str__(self):
+        return self.username
 
 
 class YieldsFrequencyChoices(models.TextChoices):
@@ -34,6 +42,7 @@ class Portfolio(models.Model):
     Methods:
         __str__(): Returns the name of the portfolio as a string representation.
     '''
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255, unique=True, null=False, blank=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateField(auto_now_add=True)
@@ -75,6 +84,7 @@ class Bond(models.Model):
     __str__():
         Returns the emission name of the bond.
     '''
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     emission_name = models.CharField(max_length=50, unique=True, null=False, blank=False)
     emission_isin = models.CharField(max_length=50, unique=True, validators=[validate_isin], null=False, blank=False)
     bond_value = models.DecimalField(max_digits=20, decimal_places=2, null=False, blank=False)
