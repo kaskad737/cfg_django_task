@@ -1,5 +1,5 @@
 SECRET_KEY=local
-DB_NAME=local
+DB_NAME=bond
 DB_USER=postgres
 DB_PASSWORD=local
 DB_PORT=5432
