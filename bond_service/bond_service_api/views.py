@@ -14,7 +14,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from .serializers import (
     MyTokenObtainPairSerializer,
@@ -90,21 +90,24 @@ class RegisterView(CreateAPIView):
 class UsersListView(ListAPIView):
     serializer_class = UsersListSerializer
     queryset = User.objects.all().order_by('pk')
+    permission_classes = [IsAuthenticated]
 
 
 @extend_schema_view(
     get=extend_schema(
         tags=['portfolio'],
-        parameters=[PortfolioSerializer],
     ),
     post=extend_schema(
         tags=['portfolio'],
-        parameters=[PortfolioSerializer],
     ),
 )
 class PortfolioListCreateView(ListCreateAPIView):
     serializer_class = PortfolioSerializer
     queryset = Portfolio.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
 
 
 @extend_schema_view(
@@ -113,19 +116,29 @@ class PortfolioListCreateView(ListCreateAPIView):
         parameters=[PortfolioInvestmentAnalysisSerializer],
         summary='Get portfolio analysis',
         responses={
-            200: {
-                "type": "object",
-                "properties": {
-                    "average_interest_rate": {"type": "float", "description": "Link to file", "example": "1.23"},
-                    "nearest_maturity_bond": {"type": "string", "description": "Link to file"},
-                    "total_value": {"type": "string", "description": "Link to file", "example": "100"},
-                    "future_value": {"type": "string", "description": "Link to file", "example": "100"},
+            status.HTTP_200_OK: {
+                'type': 'object',
+                'properties': {
+                    'average_interest_rate': {'type': 'float', 'description': '', 'example': '100.5'},
+                    'nearest_maturity_bond': {'type': 'string', 'description': '', 'example': 'bond_name'},
+                    'total_value': {'type': 'string', 'description': '', 'example': '100'},
+                    'future_value': {'type': 'string', 'description': '', 'example': '100'},
                 },
             },
-            404: {
-                "type": "object",
-                "properties": {
-                    "message": {"type": "string", "description": "Error message", "example": "Portfolio not found"},
+            status.HTTP_204_NO_CONTENT: {
+                'type': 'object',
+                'properties': {
+                    'message': {
+                        'type': 'string',
+                        'description': 'Portfolio contains no bonds.',
+                        'example': 'Portfolio contains no bonds.'
+                    },
+                },
+            },
+            status.HTTP_404_NOT_FOUND: {
+                'type': 'object',
+                'properties': {
+                    'message': {'type': 'string', 'description': 'Error message', 'example': 'Not found.'},
                 },
             },
         },
@@ -134,7 +147,7 @@ class PortfolioListCreateView(ListCreateAPIView):
 )
 class PortfolioInvestmentAnalysisView(GenericAPIView):
     serializer_class = PortfolioInvestmentAnalysisSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         portfolio_pk = self.request.data.get('portfolio_pk')
@@ -146,38 +159,43 @@ class PortfolioInvestmentAnalysisView(GenericAPIView):
 @extend_schema_view(
     get=extend_schema(
         tags=['bond'],
-        parameters=[BondSerializer],
+        responses={
+            status.HTTP_200_OK: BondSerializer(many=True),
+            status.HTTP_401_UNAUTHORIZED: None,
+            status.HTTP_403_FORBIDDEN: None,
+        },
     ),
     post=extend_schema(
         tags=['bond'],
-        parameters=[BondSerializer],
+        responses={
+            status.HTTP_201_CREATED: BondSerializer,
+            status.HTTP_400_BAD_REQUEST: None,
+            status.HTTP_401_UNAUTHORIZED: None,
+            status.HTTP_403_FORBIDDEN: None,
+        },
     ),
 )
 class ListCreateBondView(ListCreateAPIView):
     serializer_class = BondSerializer
     queryset = Bond.objects.all()
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 
 @extend_schema_view(
     get=extend_schema(
         tags=['bond'],
-        parameters=[BondSerializer],
     ),
     put=extend_schema(
         tags=['bond'],
-        parameters=[BondSerializer],
     ),
     patch=extend_schema(
         tags=['bond'],
-        parameters=[BondSerializer],
     ),
     delete=extend_schema(
         tags=['bond'],
-        parameters=[BondSerializer],
     ),
 )
 class RetrieveUpdateDestroyBondView(RetrieveUpdateDestroyAPIView):
     serializer_class = BondSerializer
     queryset = Bond.objects.all()
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
