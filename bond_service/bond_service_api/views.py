@@ -20,6 +20,7 @@ from .serializers import (
     MyTokenObtainPairSerializer,
     RegisterSerializer,
     UsersListSerializer,
+    UserSerializer,
     PortfolioSerializer,
     BondSerializer,
     PortfolioInvestmentAnalysisSerializer,
@@ -27,6 +28,11 @@ from .serializers import (
 from .models import Portfolio, Bond
 from .utils import get_portfolio_analysis
 from django.shortcuts import get_object_or_404
+from .permissions import (
+    IsOwnerOrSuperUser,
+    IsOwnerOfPortfolioOrSuperUser,
+    IsOwnerOfPortfolioInvestmentAnalysisOrSuperUser
+)
 
 
 @extend_schema_view(
@@ -34,7 +40,7 @@ from django.shortcuts import get_object_or_404
         tags=['token'],
         summary='Get JWT Token',
         responses={
-            200: {
+            status.HTTP_200_OK: {
                 'type': 'object',
                 'properties': {
                     'refresh': {'type': 'string'},
@@ -75,7 +81,7 @@ class CustomTokenVerifyView(TokenVerifyView):
         summary='User registration',
     ),
 )
-class RegisterView(CreateAPIView):
+class UserRegisterView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
@@ -95,6 +101,26 @@ class UsersListView(ListAPIView):
 
 @extend_schema_view(
     get=extend_schema(
+        tags=['user'],
+    ),
+    put=extend_schema(
+        tags=['user'],
+    ),
+    patch=extend_schema(
+        tags=['user'],
+    ),
+    delete=extend_schema(
+        tags=['user'],
+    ),
+)
+class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all().order_by('pk')
+    permission_classes = [IsAuthenticated]
+
+
+@extend_schema_view(
+    get=extend_schema(
         tags=['portfolio'],
     ),
     post=extend_schema(
@@ -103,15 +129,35 @@ class UsersListView(ListAPIView):
 )
 class PortfolioListCreateView(ListCreateAPIView):
     serializer_class = PortfolioSerializer
-    queryset = Portfolio.objects.all()
-    permission_classes = [IsAuthenticated]
+    queryset = Portfolio.objects.all().order_by('pk')
+    permission_classes = [IsAuthenticated, IsOwnerOrSuperUser]
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
 
 @extend_schema_view(
-    post=extend_schema(
+    get=extend_schema(
+        tags=['portfolio'],
+    ),
+    put=extend_schema(
+        tags=['portfolio'],
+    ),
+    patch=extend_schema(
+        tags=['portfolio'],
+    ),
+    delete=extend_schema(
+        tags=['portfolio'],
+    ),
+)
+class PortfolioRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    serializer_class = PortfolioSerializer
+    queryset = Portfolio.objects.all()
+    permission_classes = [IsAuthenticated, IsOwnerOrSuperUser]
+
+
+@extend_schema_view(
+    get=extend_schema(
         tags=['portfolio'],
         parameters=[PortfolioInvestmentAnalysisSerializer],
         summary='Get portfolio analysis',
@@ -147,9 +193,9 @@ class PortfolioListCreateView(ListCreateAPIView):
 )
 class PortfolioInvestmentAnalysisView(GenericAPIView):
     serializer_class = PortfolioInvestmentAnalysisSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOfPortfolioInvestmentAnalysisOrSuperUser]
 
-    def post(self, request):
+    def get(self, request):
         portfolio_pk = self.request.data.get('portfolio_pk')
         portfolio = get_object_or_404(Portfolio, pk=portfolio_pk)
         data = get_portfolio_analysis(portfolio=portfolio)
@@ -175,10 +221,10 @@ class PortfolioInvestmentAnalysisView(GenericAPIView):
         },
     ),
 )
-class ListCreateBondView(ListCreateAPIView):
+class BondListCreateView(ListCreateAPIView):
     serializer_class = BondSerializer
     queryset = Bond.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOfPortfolioOrSuperUser]
 
 
 @extend_schema_view(
@@ -195,7 +241,7 @@ class ListCreateBondView(ListCreateAPIView):
         tags=['bond'],
     ),
 )
-class RetrieveUpdateDestroyBondView(RetrieveUpdateDestroyAPIView):
+class BondRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     serializer_class = BondSerializer
     queryset = Bond.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOfPortfolioOrSuperUser]
