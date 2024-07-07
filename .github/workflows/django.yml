@@ -18,6 +18,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
 
     services:
       postgres:
@@ -39,7 +42,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Python ${{env.PYTHON_VERSION}}
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{env.PYTHON_VERSION}}
 
@@ -51,9 +54,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Tests
-        working-directory: /cfg_django_task
         run: |
-          export PYTHONPATH=$PYTHONPATH:$(pwd)
           pytest
         env:
           DB_NAME: ${{ env.DB_NAME}}
