@@ -16,7 +16,6 @@ def get_portfolio_analysis(portfolio: Portfolio) -> Dict:
         years = Decimal((nearest_maturity_bond.maturity_date - timezone.now().date()).days / Decimal(365.25))
 
         future_value = total_value * (1 + avg_interest_rate / 100) ** years
-
         return {
             'average_interest_rate': avg_interest_rate,
             'nearest_maturity_bond': BondSerializer(nearest_maturity_bond).data,
