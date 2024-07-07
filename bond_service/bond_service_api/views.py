@@ -97,15 +97,19 @@ class UsersListView(ListAPIView):
 @extend_schema_view(
     get=extend_schema(
         tags=['user'],
+        summary='Get user instance',
     ),
     put=extend_schema(
         tags=['user'],
+        summary='Change user instance',
     ),
     patch=extend_schema(
         tags=['user'],
+        summary='Patch user instance',
     ),
     delete=extend_schema(
         tags=['user'],
+        summary='Delete user instance',
     ),
 )
 class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
@@ -117,9 +121,11 @@ class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 @extend_schema_view(
     get=extend_schema(
         tags=['portfolio'],
+        summary='Get list of all portfolios',
     ),
     post=extend_schema(
         tags=['portfolio'],
+        summary='Create portfolio',
     ),
 )
 class PortfolioListCreateView(ListCreateAPIView):
@@ -148,15 +154,19 @@ class PortfolioListCreateView(ListCreateAPIView):
 @extend_schema_view(
     get=extend_schema(
         tags=['portfolio'],
+        summary='Get portfolio instance',
     ),
     put=extend_schema(
         tags=['portfolio'],
+        summary='Change portfolio instance',
     ),
     patch=extend_schema(
         tags=['portfolio'],
+        summary='Patch portfolio instance',
     ),
     delete=extend_schema(
         tags=['portfolio'],
+        summary='Delete portfolio instance',
     ),
 )
 class PortfolioRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
@@ -232,6 +242,7 @@ class PortfolioInvestmentAnalysisView(GenericAPIView):
 @extend_schema_view(
     get=extend_schema(
         tags=['bond'],
+        summary='Get list of all bonds',
         responses={
             status.HTTP_200_OK: BondSerializer(many=True),
             status.HTTP_401_UNAUTHORIZED: None,
@@ -240,6 +251,7 @@ class PortfolioInvestmentAnalysisView(GenericAPIView):
     ),
     post=extend_schema(
         tags=['bond'],
+        summary='Create bond',
         responses={
             status.HTTP_201_CREATED: BondSerializer,
             status.HTTP_400_BAD_REQUEST: None,
@@ -281,15 +293,19 @@ class BondListCreateView(ListCreateAPIView):
 @extend_schema_view(
     get=extend_schema(
         tags=['bond'],
+        summary='Get bond instance',
     ),
     put=extend_schema(
         tags=['bond'],
+        summary='Change bond instance',
     ),
     patch=extend_schema(
         tags=['bond'],
+        summary='Patch bond instance',
     ),
     delete=extend_schema(
         tags=['bond'],
+        summary='Delete bond instance',
     ),
 )
 class BondRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
