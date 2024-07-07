@@ -32,3 +32,7 @@ When the project is launched
 Tests are implemented via pytest
 
 Tests are run every time a commit is pushed to the repository. On the main page of this repo you can also see the result of testing workflow. Testing was realized through "Git Actions".
+
+P.S.
+You can find the bond emission isins here:
+<https://www.kurzy.cz/akcie-cz/emise/>
