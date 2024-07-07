@@ -29,15 +29,52 @@ def admin_user(db):
 @pytest.fixture
 def portfolio1(db, user1):
     portfolio = Portfolio.objects.create(name='portfolio1', created_by=user1)
-    Bond.objects.create(emission_name='bond1_1', portfolio=portfolio)
-    Bond.objects.create(emission_name='bond2_1', portfolio=portfolio)
+    Bond.objects.create(
+        emission_name='bond1_1',
+        emission_isin="CZ0003551251",
+        bond_value="100",
+        interest_rate="15",
+        purchase_date="2024-07-06",
+        maturity_date="2024-08-06",
+        yields_frequency="12",
+        portfolio=portfolio
+    )
+    Bond.objects.create(
+        emission_name='bond2_1',
+        emission_isin="CZ0008040318",
+        bond_value="100",
+        interest_rate="15",
+        purchase_date="2024-07-06",
+        maturity_date="2024-08-06",
+        yields_frequency="12",
+        portfolio=portfolio
+    )
     return portfolio
 
 
+@pytest.fixture
 def portfolio2(db, user2):
     portfolio = Portfolio.objects.create(name='portfolio2', created_by=user2)
-    Bond.objects.create(emission_name='bond1_2', portfolio=portfolio)
-    Bond.objects.create(emission_name='bond2_2', portfolio=portfolio)
+    Bond.objects.create(
+        emission_name='bond1_2',
+        emission_isin="CZ0008040300",
+        bond_value="100",
+        interest_rate="15",
+        purchase_date="2024-07-06",
+        maturity_date="2024-08-06",
+        yields_frequency="12",
+        portfolio=portfolio
+    )
+    Bond.objects.create(
+        emission_name='bond2_2',
+        emission_isin="CZ0003532558",
+        bond_value="100",
+        interest_rate="15",
+        purchase_date="2024-07-06",
+        maturity_date="2024-08-06",
+        yields_frequency="12",
+        portfolio=portfolio
+    )
     return portfolio
 
 
