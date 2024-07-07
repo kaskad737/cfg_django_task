@@ -7,6 +7,30 @@ from decimal import Decimal
 
 
 def get_portfolio_analysis(portfolio: Portfolio) -> Dict:
+    '''
+    Analyzes the bonds within a portfolio and returns a dictionary containing
+    various metrics and details about the portfolio's bond holdings.
+
+    Args:
+        portfolio (Portfolio): The portfolio object containing bonds to be analyzed.
+
+    Returns:
+        Dict: A dictionary with the following keys:
+            - 'average_interest_rate' (Decimal): The average interest rate of all bonds in the portfolio.
+            - 'nearest_maturity_bond' (dict): Serialized data of the bond with the nearest maturity date.
+            - 'total_value' (Decimal): The total value of all bonds in the portfolio.
+            - 'future_value' (Decimal): The future value of the portfolio, calculated based on the average interest rate
+              and the time until the nearest maturity date.
+            If the portfolio contains no bonds, returns a dictionary with a single key:
+            - 'message' (str): A message indicating that the portfolio contains no bonds.
+
+    Raises:
+        This function does not raise any exceptions.
+
+    Note:
+        The 'nearest_maturity_bond' is determined based on the maturity date closest to the current date.
+        The future value is calculated assuming compound interest over the time until the nearest maturity date.
+    '''
     all_portfolio_bonds: QuerySet[Bond] = portfolio.bonds.all()
     if all_portfolio_bonds.exists():
         total_value = Decimal(sum(all_portfolio_bonds.values_list('bond_value', flat=True)))
