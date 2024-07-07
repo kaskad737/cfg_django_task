@@ -13,8 +13,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
-
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.exceptions import PermissionDenied
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from .serializers import (
     MyTokenObtainPairSerializer,
@@ -262,6 +262,16 @@ class BondListCreateView(ListCreateAPIView):
             queryset = Bond.objects.filter(
                 portfolio__created_by=current_user)
         return queryset
+
+    def perform_create(self, serializer):
+        current_user = self.request.user
+        portfolio_id = self.request.data.get('portfolio', None)
+        if portfolio_id:
+            portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
+            if portfolio.created_by == current_user:
+                serializer.save(portfolio=portfolio)
+                return
+        raise PermissionDenied("You do not have permission to create a bond in this portfolio.")
 
 
 @extend_schema_view(
