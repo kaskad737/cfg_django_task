@@ -52,7 +52,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          python -m pytest bond_service_api
+          pytest --ds=bond_service.settings.local bond_service_api
         env:
           DB_NAME: ${{ env.DB_NAME}}
           DB_USER: ${{ env.DB_USER }}
@@ -62,5 +62,6 @@ jobs:
           SECRET_KEY: ${{ env.SECRET_KEY }}
           DEBUG: ${{ env.DEBUG }}
           DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
+          PYTHONPATH: $PYTHONPATH:./bond_service/
 
       - run: flake8 .
