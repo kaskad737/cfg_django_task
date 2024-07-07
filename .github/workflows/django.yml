@@ -9,7 +9,7 @@ env:
   DB_HOST: localhost
   DB_PORT: 5432
   DEBUG: true
-  DJANGO_SETTINGS_MODULE: bond_service.settings.local
+  DJANGO_SETTINGS_MODULE: bond_service.settings.base
 
 on:
   push:
@@ -55,7 +55,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          pytest
+          pytest --ds=bond_service.settings.base
         env:
           DB_NAME: ${{ env.DB_NAME}}
           DB_USER: ${{ env.DB_USER }}
