@@ -52,7 +52,7 @@ jobs:
 
       - name: Migrate
         run: |
-          python ./restaurant_visit_diary/manage.py migrate
+          python ./bond_service/manage.py migrate
         env:
           DB_NAME: ${{ env.DB_NAME }}
           DB_USER: ${{ env.DB_USER }}
