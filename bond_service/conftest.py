@@ -2,6 +2,8 @@ import pytest
 from rest_framework.test import APIClient
 from django.contrib.auth.models import User
 from bond_service_api.models import Portfolio, Bond
+from django.urls import reverse
+from requests import Response
 
 
 @pytest.fixture
@@ -37,3 +39,36 @@ def portfolio2(db, user2):
     Bond.objects.create(emission_name='bond1_2', portfolio=portfolio)
     Bond.objects.create(emission_name='bond2_2', portfolio=portfolio)
     return portfolio
+
+
+@pytest.fixture
+def obtain_access_token(client: APIClient):
+    def _obtain_access_token(username, password):
+        login_url = reverse('bond_service_api:token_obtain_pair')
+        response: Response = client.post(login_url, {
+            'username': username,
+            'password': password
+        })
+        return response.data['access']
+    return _obtain_access_token
+
+
+@pytest.fixture
+def obtain_refresh_token(api_client: APIClient):
+    def _obtain_refresh_token(username, password):
+        login_url = reverse('bond_service_api:token_obtain_pair')
+        response: Response = api_client.post(login_url, {
+            'username': username,
+            'password': password
+        })
+        return response.data['refresh']
+    return _obtain_refresh_token
+
+
+@pytest.fixture
+def authenticate_user(api_client: APIClient, obtain_access_token):
+    def _authenticate_user(username, password):
+        token = obtain_access_token(username=username, password=password)
+        api_client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+        return
+    return _authenticate_user
