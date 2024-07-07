@@ -1,14 +1,15 @@
 name: Django CI
 
 env:
+  SECRET_KEY: test
   PYTHON_VERSION: "3.10"
-  DB_NAME: django_restaurants
+  DB_NAME: bond
   DB_USER: postgres
-  DB_PASSWORD: django-restaurants
+  DB_PASSWORD: postgres
   DB_HOST: localhost
   DB_PORT: 5432
-  REDIS_HOST: localhost
-  ENVIRONMENT_TYPE: "development"
+  DEBUG: true
+  DJANGO_SETTINGS_MODULE: bond_service.settings.local
 
 on:
   push:
@@ -22,9 +23,9 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_DB: django_restaurants
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: django-restaurants
+          POSTGRES_DB: ${{ env.DB_NAME }}
+          POSTGRES_USER: ${{ env.DB_USER }}
+          POSTGRES_PASSWORD: ${{ env.DB_PASSWORD }}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -32,16 +33,6 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-
-      redis:
-        image: redis
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 6379:6379
 
     steps:
       - name: Checkout code
@@ -68,23 +59,21 @@ jobs:
           DB_PASSWORD: ${{ env.DB_PASSWORD }}
           DB_HOST: ${{ env.DB_HOST }}
           DB_PORT: ${{ env.DB_PORT }}
-          SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          REDIS_HOST: ${{ env.REDIS_HOST }}
-          ENVIRONMENT_TYPE: ${{ env.ENVIRONMENT_TYPE }}
-          API_TOKEN: ${{ secrets.API_TOKEN }}
+          SECRET_KEY: ${{ env.SECRET_KEY }}
+          DEBUG: ${{ env.DEBUG }}
+          DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
 
       - name: Run Tests
         run: |
-          python ./restaurant_visit_diary/manage.py test restaurantapiapp
+          pytest
         env:
           DB_NAME: ${{ env.DB_NAME}}
           DB_USER: ${{ env.DB_USER }}
           DB_PASSWORD: ${{ env.DB_PASSWORD }}
           DB_HOST: ${{ env.DB_HOST }}
           DB_PORT: ${{ env.DB_PORT }}
-          SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          REDIS_HOST: ${{ env.REDIS_HOST }}
-          ENVIRONMENT_TYPE: ${{ env.ENVIRONMENT_TYPE }}
-          API_TOKEN: ${{ secrets.API_TOKEN }}
+          SECRET_KEY: ${{ env.SECRET_KEY }}
+          DEBUG: ${{ env.DEBUG }}
+          DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
 
       - run: flake8 .
