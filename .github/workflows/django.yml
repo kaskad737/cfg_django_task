@@ -51,7 +51,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Tests
+        working-directory: /cfg_django_task
         run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
           pytest
         env:
           DB_NAME: ${{ env.DB_NAME}}
