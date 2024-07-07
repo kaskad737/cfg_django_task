@@ -7,8 +7,7 @@ Status of Last Deployment:<br>
 ## How to run project
 
 1. "git clone" this project
-2. Create ".local" or ".prod" file in the root folder of the project with the following content (insert your values):
-   You can find examples of what variables you need to have in one or another type of deployment in the files (.local.template or .prod.template)
+2. Create ".local" or ".prod" file in the root folder of the project. You can find examples of what variables you need to have in one or another type of deployment in the files (".local.template" or ".prod.template") or you just can rename it.
 
 3. In the root folder of the project, run "bash run_local.sh" for local deployment (docker compose up, so you will see log in console) or "bash run_prod.sh" for prod deployment (docker compose up -d)
 
