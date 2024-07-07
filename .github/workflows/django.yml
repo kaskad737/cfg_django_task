@@ -18,9 +18,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./
 
     services:
       postgres:
@@ -55,7 +52,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          pytest --ds=bond_service.settings.base
+          python ./bond_service/manage.py pytest bond_service_api
         env:
           DB_NAME: ${{ env.DB_NAME}}
           DB_USER: ${{ env.DB_USER }}
