@@ -1,0 +1,74 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$320000$ubl3wDi3DTV9vqyfsMy4nl$5ElyS84QK6H1KIOcnJkFQhUnCH3MYCxqgNoA6haCvQk=",
+        "last_login": null,
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "testemail@mail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-07-07T21:15:20.606Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$320000$6cUcRFzZA727NzWX0pXmdf$7EIonHHR5d2MTwQcKPkq+JoBA07yQJoh5E0+jOm6VJ8=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "test_user_1",
+        "first_name": "testname",
+        "last_name": "testsurname",
+        "email": "test1@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-07-07T21:16:02.956Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$320000$OsC8dae1i1t1sxKjiP6rRJ$JQMqIivBH3Soxvj7EpA0tpcfUl8xgMoou4KaZHc48Kc=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "test_user_2",
+        "first_name": "testname2",
+        "last_name": "testsurname2",
+        "email": "test2@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-07-07T21:16:07.472Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$320000$MuNaOW9fZpmGOTOT9gyOE2$MGuAhROfjFA0euNsWvtUKMridieLXRSXCWkH7qYLRvU=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "test_user_3",
+        "first_name": "testname3",
+        "last_name": "testsurname3",
+        "email": "test3@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-07-07T21:16:11.564Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

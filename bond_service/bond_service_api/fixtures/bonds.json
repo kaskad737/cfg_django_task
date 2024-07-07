@@ -1,0 +1,66 @@
+[
+{
+    "model": "bond_service_api.bond",
+    "pk": 1,
+    "fields": {
+        "emission_name": "test_emision_name",
+        "emission_isin": "CZ0003551251",
+        "bond_value": "100.00",
+        "interest_rate": "15.00",
+        "purchase_date": "2024-07-06",
+        "maturity_date": "2024-08-06",
+        "yields_frequency": 12,
+        "portfolio": 1,
+        "created_at": "2024-07-07",
+        "updated_at": "2024-07-07T21:18:03.005Z"
+    }
+},
+{
+    "model": "bond_service_api.bond",
+    "pk": 2,
+    "fields": {
+        "emission_name": "test_emision_name2",
+        "emission_isin": "CZ0008040318",
+        "bond_value": "100.00",
+        "interest_rate": "15.00",
+        "purchase_date": "2024-07-06",
+        "maturity_date": "2024-08-06",
+        "yields_frequency": 12,
+        "portfolio": 1,
+        "created_at": "2024-07-07",
+        "updated_at": "2024-07-07T21:18:07.820Z"
+    }
+},
+{
+    "model": "bond_service_api.bond",
+    "pk": 3,
+    "fields": {
+        "emission_name": "test_emision_name3",
+        "emission_isin": "CZ0003532558",
+        "bond_value": "100.00",
+        "interest_rate": "15.00",
+        "purchase_date": "2024-07-06",
+        "maturity_date": "2024-08-06",
+        "yields_frequency": 12,
+        "portfolio": 2,
+        "created_at": "2024-07-07",
+        "updated_at": "2024-07-07T21:19:04.534Z"
+    }
+},
+{
+    "model": "bond_service_api.bond",
+    "pk": 4,
+    "fields": {
+        "emission_name": "test_emision_name4",
+        "emission_isin": "CZ0008040300",
+        "bond_value": "100.00",
+        "interest_rate": "15.00",
+        "purchase_date": "2024-07-06",
+        "maturity_date": "2024-08-06",
+        "yields_frequency": 12,
+        "portfolio": 2,
+        "created_at": "2024-07-07",
+        "updated_at": "2024-07-07T21:19:10.050Z"
+    }
+}
+]
