@@ -221,8 +221,12 @@ class PortfolioInvestmentAnalysisView(GenericAPIView):
     def get(self, request):
         portfolio_pk = self.request.GET.get('portfolio_pk')
         portfolio = get_object_or_404(Portfolio, pk=portfolio_pk)
-        data = get_portfolio_analysis(portfolio=portfolio)
-        return Response(data=data, status=status.HTTP_200_OK)
+        user = self.request.user
+        if (portfolio.created_by == user) or (user.is_superuser):
+            data = get_portfolio_analysis(portfolio=portfolio)
+            return Response(data=data, status=status.HTTP_200_OK)
+        else:
+            raise PermissionDenied("You do not have permission to see analysis of this portfolio.")
 
 
 @extend_schema_view(
@@ -271,7 +275,7 @@ class BondListCreateView(ListCreateAPIView):
             if portfolio.created_by == current_user:
                 serializer.save(portfolio=portfolio)
                 return
-        raise PermissionDenied("You do not have permission to create a bond in this portfolio.")
+        raise PermissionDenied('You do not have permission to create a bond in this portfolio.')
 
 
 @extend_schema_view(
