@@ -9,7 +9,7 @@ Status of Last Deployment:<br>
 1. "git clone" this project
 2. Create ".local" or ".prod" file in the root folder of the project. You can find examples of what variables you need to have in one or another type of deployment in the files (".local.template" or ".prod.template") or you just can rename it.
 
-3. In the root folder of the project, run "bash run_local.sh" for local deployment (docker compose up, so you will see log in console) or "bash run_prod.sh" for prod deployment (docker compose up -d)
+3. In the root folder of the project, run "bash run_local.sh" for local deployment (it's runs docker compose up in the script, so you will see log in console and it's runs in DEBUG mode) or "bash run_prod.sh" for prod deployment (it's runs docker compose up -d in the script)
 
 ## Views description
 
