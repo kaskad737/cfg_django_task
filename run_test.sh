@@ -13,7 +13,7 @@ if [ -f "$ENV_FILE" ]; then
     echo "Loading environment variables from $ENV_FILE"
     export $(grep -v '^#' $ENV_FILE | xargs)
 else
-    echo "Error: .env file '$ENV_FILE' for Docker Compose not found."
+    echo "Error: .local file '$ENV_FILE' for Docker Compose not found."
     exit 1
 fi
 

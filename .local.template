@@ -3,6 +3,5 @@ DB_NAME=bond
 DB_USER=postgres
 DB_PASSWORD=postgres
 DB_PORT=5432
-EXTERNAL_DB_PORT=5432
 DEBUG=True
 DJANGO_SETTINGS_MODULE=bond_service.settings.local

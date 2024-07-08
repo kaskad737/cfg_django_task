@@ -28,6 +28,8 @@ When the project is launched
 
 ## Tests
 
+If you want to run tests, you need to create ".local" file with env veriables as described above and then run "bash run_test.sh"
+
 Tests are implemented via pytest
 
 Tests are run every time a commit is pushed to the repository. On the main page of this repo you can also see the result of testing workflow. Testing was realized through "Git Actions".
